@@ -1,0 +1,38 @@
+{
+  "name": "menu",
+  "version": "1.0.0",
+  "description": "sth about menu",
+  "main": "/dist/bundle.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack -p --config webpack.config.js",
+    "compile": "NODE_ENV=development webpack -p --config webpack.config.dev.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsx-component/Menu.git"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "shiyangzhaoa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tsx-component/Menu/issues"
+  },
+  "files": [
+    "assets/*.css",
+    "dist"
+  ],
+  "homepage": "https://github.com/tsx-component/Menu#readme",
+  "dependencies": {
+    "@types/react": "^16.3.12",
+    "@types/react-dom": "^16.0.5",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "ts-loader": "^4.2.0",
+    "typescript": "^2.8.3"
+  }
+}
