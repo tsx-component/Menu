@@ -1,38 +1,92 @@
 import * as React from 'react';
 import * as ReactDOM from "react-dom";
-import { PropdType } from './PropdType';
+import * as classNames from 'classnames';
+import { PropsType } from './PropsType';
+import '../assets/index.css';
 
-export default class Menu extends React.Component<PropdType, {}> {
+interface State {
+  activeIndex: number;
+  selectedIndex: number;
+  selectedOptions: any[];
+}
+
+export default class Menu extends React.Component<PropsType, State> {
   static defaultProps = {
     isLoading: false,
     defaultIndex: 0,
+    options: [],
+    font: 'fa',
+  } as PropsType;
+
+  static getDerivedStateFromProps(nextProps: PropsType, prevState: State) {
+    return {
+      selectedOptions: nextProps.options
+    }
   }
 
   state = {
-    editing: false
+    activeIndex: 0,
+    selectedIndex: -1,
+    selectedOptions: [],
+  }
+
+  getLabel = () => {
+    return '233';
+  }
+
+  wrapTrackBy = () => {
+    return '';
+  }
+
+  onMenuMouseDown = (event: any, index: number) => {
+    (event as MouseEvent).stopPropagation();
+    this.setState({
+      selectedIndex: index
+    });
   }
 
   render() {
+    const { isLoading, font } = this.props;
+    const { selectedOptions, activeIndex } = this.state;
     return (
       <>
         {
-          this.state.editing && 
+          this.props.show && 
           (
             <div className="select-options">
               <ul className="select-selection__box">
-                <li className="select-selection__option"
-                    ng-repeat="option in $ctrl.typeOptions track by $ctrl.wrapTrackBy(option, $index)"
-                    ng-class="$ctrl.getStateClass(option, $index)"
-                    scroll-into-view="$index === $ctrl.activeIndex"
-                    ng-bind="$ctrl.getLabel(option)"
-                    ng-mouseenter="$ctrl.onMouserEnter($index)"
-                    ng-mousedown="$ctrl.onClickOption(option, $event)"></li>
-                <li className="select-selection__hold" ng-show="$ctrl.isLoading">
-                  <i className="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                  正在加载...
-                </li>
-                <li className="select-selection__hold"
-                    ng-show="!$ctrl.isLoading && !$ctrl.typeOptions.length">无匹配数据</li>
+                {
+                  isLoading ? 
+                  (
+                    <li className="select-selection__load" ng-show="$ctrl.isLoading">
+                      <i className={classNames(font, `${font}-spinner`, `${font}-spin`)} aria-hidden="true"></i>
+                      正在加载...
+                    </li>
+                  )
+                  : 
+                  (
+                    selectedOptions.length ?
+                    selectedOptions.map((item, index, arr) => {
+                      const isIncludes = selectedOptions.lastIndexOf(item) !== -1;
+                      return (
+                        <li
+                          className={classNames('select-selection__option', {
+                            'select-selection-item-active__selected': activeIndex === index && isIncludes
+                          }, {
+                            'select-selection-item-active': activeIndex === index && !isIncludes
+                          }, {
+                            'select-selection-item-selected': activeIndex !== index && isIncludes
+                          })}
+                          onMouseEnter={() => this.setState({ activeIndex: index })}
+                          onMouseDown={(event) => this.onMenuMouseDown(event, index)}
+                          key={this.wrapTrackBy()}
+                        >{this.getLabel()}</li>
+                      );
+                    })
+                    :
+                    <li className="select-selection__hold">无匹配数据</li>
+                  )
+                }
               </ul>
             </div>
           )
@@ -43,6 +97,6 @@ export default class Menu extends React.Component<PropdType, {}> {
 }
 
 ReactDOM.render(
-  <Menu />,
+  <Menu options={['233']} defaultIndex={0} show={true} font='fa'/>,
   document.getElementById('root') as HTMLElement
 );
